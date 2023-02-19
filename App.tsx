@@ -1,86 +1,106 @@
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput } from 'react-native';
+import { FC, useState, useEffect } from "react";
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Button,
+  Alert,
+  TextInput,
+  TouchableHighlight,
+} from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import StudentList from "./StudentsList";
+import StudentDetails from "./StudentDetails";
+import StudentAdd from "./StudentAdd";
 
-const App = () => {
-  console.log("my app is running")
-
-  const [id, setId] = useState("")
-  const [address, setAddress] = useState("")
-  const [name, setName] = useState("")
-
-  const onPressCallback = () => {
-    console.log("button was pressed")
-    Alert.alert("Alert", "This is my alert text", [{text: 'OK', onPress: ()=>{console.log("alert pressed")}}])
-  }
-
+//need to move to different place
+const InfoScreen: FC<{ route: any; navigation: any }> = ({
+  route,
+  navigation,
+}) => {
   return (
-    <View style={styles.container}>
-      <Image source={require('./assets/avatar.png')} style={styles.avatar}></Image>
-      <TextInput
-        style={styles.input}
-        onChangeText={setId}
-        value={id}
-        placeholder={'Student ID'}
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setAddress}
-        value={id}
-        placeholder={'Student Name'}
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setName}
-        value={id}
-        placeholder={'Student Addres'}
-      />
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity onPress={onPressCallback} style={styles.button}>
-          <Text style={styles.buttonText}>CANCEL</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onPressCallback} style={styles.button}>
-          <Text style={styles.buttonText}>SAVE</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Info Screen</Text>
     </View>
   );
-}
+};
+
+// can stay here
+const StudentStack = createNativeStackNavigator();
+const StudentStackCp: FC<{ route: any; navigation: any }> = ({
+  route,
+  navigation,
+}) => {
+  const addNewStudents = () => {
+    navigation.navigate("StudentAdd");
+  };
+  return (
+    <StudentStack.Navigator>
+      <StudentStack.Screen
+        name="StudentList"
+        component={StudentList}
+        options={{
+          headerRight: () => (
+            <TouchableOpacity onPress={addNewStudents}>
+              <Ionicons name={"add-outline"} size={40} color={"gray"} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
+      <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
+    </StudentStack.Navigator>
+  );
+};
+
+const Tab = createBottomTabNavigator();
+const App: FC = () => {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName = "";
+            if (route.name === "Info") {
+              iconName = focused
+                ? "information-circle"
+                : "information-circle-outline";
+            } else if (route.name === "StudentStackCp") {
+              iconName = focused ? "list-circle" : "list-circle-outline";
+            }
+
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray",
+        })}
+      >
+        <Tab.Screen
+          name="StudentStackCp"
+          component={StudentStackCp}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen name="Info" component={InfoScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-  avatar: {
-    height: 200,
-    resizeMode: "contain",
-    alignSelf: "center",
-    margin: 40
-  },
-  input: {
-    height: 40,
-    margin: 12,   // for space between the imput texts
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 3
-  },
-  buttonsContainer: {
-    //flex: 1,
-    flexDirection: "row"
-  },
-  button: {
+    marginTop: StatusBar.currentHeight,
     flex: 1,
-    margin: 12,
-    padding: 12,
-    backgroundColor: "blue",
-    borderRadius: 10
   },
-  buttonText: {
-    textAlign: "center",
-    color: 'white'
-  }
-
 });
 
+export default App;
 
-export default App
+// עדיף לייצר קובץ COLORS שבו נשים את כל הצבעים שנעבוד איתם
+// נמצא במצגת של הרצאה 11 במצגת של הרשימה
