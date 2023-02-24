@@ -18,6 +18,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import StudentList from "./components/StudentsList";
 import StudentDetails from "./components/StudentDetails";
 import StudentAdd from "./components/StudentAdd";
+import Register from "./components/Register";
 
 //need to move to different place
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
@@ -54,7 +55,7 @@ const StudentStackCp: FC<{ route: any; navigation: any }> = ({
         }}
       />
       <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
-      <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
+      <StudentStack.Screen name="StudentAdd" component={Register} />
     </StudentStack.Navigator>
   );
 };
