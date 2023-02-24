@@ -13,7 +13,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 
-import StudentModel, { Student } from "./model/StudentModel";
+import StudentModel, { Student } from "../model/StudentModel";
 
 const ListItem: FC<{
   name: String;
@@ -22,17 +22,27 @@ const ListItem: FC<{
   onRowSelected: (id: String) => void;
 }> = ({ name, id, image, onRowSelected }) => {
   const onClick = () => {
-    console.log("row was selected in row " + id);
+    console.log("int he row: row was selected " + id);
     onRowSelected(id);
   };
 
+  console.log("image: " + image);
   return (
     <TouchableHighlight onPress={onClick} underlayColor={"gainsboro"}>
       <View style={styles.listRow}>
-        <Image
-          style={styles.listRowImage}
-          source={require("./assets/avatar.png")}
-        />
+        {image == "" && (
+          <Image
+            style={styles.listRowImage}
+            source={require("../assets/avatar.png")}
+          />
+        )}
+        {image != "" && (
+          <Image
+            style={styles.listRowImage}
+            source={{ uri: image.toString() }}
+          />
+        )}
+
         <View style={styles.listRowTextContainer}>
           <Text style={styles.listRowName}>{name}</Text>
           <Text style={styles.listRowId}>{id}</Text>
@@ -47,20 +57,28 @@ const StudentList: FC<{ route: any; navigation: any }> = ({
   navigation,
 }) => {
   const onRowSelected = (id: String) => {
-    console.log("row selected in list " + id);
+    console.log("in the list: row was selected " + id);
     navigation.navigate("StudentDetails", { studentId: id });
   };
 
   const [students, setStudents] = useState<Array<Student>>();
 
   useEffect(() => {
-    // maybe add a progress bar until the update happen in the screen
-    const unsubscribe = navigation.addListener("focus", () => {
-      console.log("screen in focus");
-      setStudents(StudentModel.getAllStudents());
+    const unsubscribe = navigation.addListener("focus", async () => {
+      console.log("focus");
+      let students: Student[] = [];
+      try {
+        students = await StudentModel.getAllStudents();
+        console.log("fetching students complete");
+      } catch (err) {
+        console.log("fail fetching students " + err);
+      }
+      console.log("fetching finish");
+      setStudents(students);
     });
     return unsubscribe;
   });
+
   return (
     <FlatList
       style={styles.flatlist}
@@ -82,10 +100,10 @@ const styles = StyleSheet.create({
   container: {
     marginTop: StatusBar.currentHeight,
     flex: 1,
+    backgroundColor: "grey",
   },
   flatlist: {
     flex: 1,
-    // marginTop: StatusBar.currentHeight,
   },
   listRow: {
     margin: 4,

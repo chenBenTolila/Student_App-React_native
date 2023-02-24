@@ -15,9 +15,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import StudentList from "./StudentsList";
-import StudentDetails from "./StudentDetails";
-import StudentAdd from "./StudentAdd";
+import StudentList from "./components/StudentsList";
+import StudentDetails from "./components/StudentDetails";
+import StudentAdd from "./components/StudentAdd";
 
 //need to move to different place
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
