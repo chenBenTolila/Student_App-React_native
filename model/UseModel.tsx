@@ -48,8 +48,19 @@ const uploadImage = async (imageURI: String) => {
   return "";
 };
 
-const loginUser = async (email: String, password: String) => {};
+const loginUser = async (email: String, password: String) => {
+  const data = {
+    email: email,
+    password: password,
+  };
+  try {
+    const res: any = await AuthApi.loginUser(data);
+    return res;
+    // TODO - return the status to the app so I can handle it in the screen
+  } catch (err) {
+    console.log("add user fail: " + err);
+    return null;
+  }
+};
 
-// @react-native-async-storage/async-storage
-
-export default { addUser, uploadImage };
+export default { addUser, uploadImage, loginUser };

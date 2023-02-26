@@ -15,10 +15,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import StudentList from "./components/StudentsList";
 import StudentDetails from "./components/StudentDetails";
 import StudentAdd from "./components/StudentAdd";
 import Register from "./components/Register";
+import Login from "./components/Login";
+import apiClient from "./api/ClientApi";
 
 //need to move to different place
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
@@ -31,6 +34,19 @@ const InfoScreen: FC<{ route: any; navigation: any }> = ({
     </View>
   );
 };
+
+const LoginStack = createNativeStackNavigator();
+// const LoginStackCp: FC<{ route: any; navigation: any }> = ({
+//   route,
+//   navigation,
+// }) => {
+//   return (
+//     <LoginStack.Navigator>
+//       <LoginStack.Screen name="Login" component={Login} />
+//       <LoginStack.Screen name="Register" component={Register} />
+//     </LoginStack.Navigator>
+//   );
+// };
 
 // can stay here
 const StudentStack = createNativeStackNavigator();
@@ -55,43 +71,76 @@ const StudentStackCp: FC<{ route: any; navigation: any }> = ({
         }}
       />
       <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
-      <StudentStack.Screen name="StudentAdd" component={Register} />
+      <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
     </StudentStack.Navigator>
   );
 };
 
+const updateToken = async (setToken: any) => {
+  const token = await AsyncStorage.getItem("accessToken");
+  // await AsyncStorage.clear();
+  console.log("in update token " + token);
+  if (token != null) {
+    apiClient.setHeader("Authorization", "JWT " + token);
+    return setToken(token);
+  }
+};
+
 const Tab = createBottomTabNavigator();
 const App: FC = () => {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName = "";
-            if (route.name === "Info") {
-              iconName = focused
-                ? "information-circle"
-                : "information-circle-outline";
-            } else if (route.name === "StudentStackCp") {
-              iconName = focused ? "list-circle" : "list-circle-outline";
-            }
+  const [token, setToken] = useState();
+  updateToken(setToken);
+  if (!token) {
+    return (
+      <NavigationContainer>
+        <LoginStack.Navigator>
+          <LoginStack.Screen name="Login">
+            {(props) => (
+              <Login
+                route={props.route}
+                navigation={props.navigation}
+                setToken={setToken}
+              />
+            )}
+          </LoginStack.Screen>
+          <LoginStack.Screen name="Register" component={Register} />
+        </LoginStack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName: any = "";
+              if (route.name === "Info") {
+                iconName = focused
+                  ? "information-circle"
+                  : "information-circle-outline";
+              } else if (route.name === "StudentStackCp") {
+                iconName = focused ? "list-circle" : "list-circle-outline";
+              } else if (route.name === "StudentStackCp") {
+                iconName = focused ? "home" : "home-outline";
+              }
 
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: "gray",
-        })}
-      >
-        <Tab.Screen
-          name="StudentStackCp"
-          component={StudentStackCp}
-          options={{ headerShown: false }}
-        />
-        <Tab.Screen name="Info" component={InfoScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+              // You can return any component that you like here!
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: "tomato",
+            tabBarInactiveTintColor: "gray",
+          })}
+        >
+          <Tab.Screen
+            name="StudentStackCp"
+            component={StudentStackCp}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen name="Info" component={InfoScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

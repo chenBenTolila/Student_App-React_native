@@ -16,7 +16,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import FormData from "form-data";
 
-import AuthModel, { User } from "../model/AuthModel";
+import UserModel, { User } from "../model/UseModel";
 
 const Register: FC<{ route: any; navigation: any }> = ({
   route,
@@ -77,12 +77,12 @@ const Register: FC<{ route: any; navigation: any }> = ({
     try {
       if (avatarUri != "") {
         console.log("uploading image");
-        const url = await AuthModel.uploadImage(avatarUri);
+        const url = await UserModel.uploadImage(avatarUri);
         user.image = url;
         console.log("got url from upload: " + url);
       }
       console.log("saving user");
-      await AuthModel.addUser(user);
+      await UserModel.addUser(user);
     } catch (err) {
       console.log("fail adding user: " + err);
     }
