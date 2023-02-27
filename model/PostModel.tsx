@@ -212,14 +212,18 @@ const getAllUserPosts = async (userId: string) => {
   return createPostsList(res);
 };
 
-const addPost = async (post: newPost) => {
+const addPost = async (newPost: any) => {
+  console.log("addPost function");
+  console.log("message: " + newPost.message);
   const data = {
-    message: post.message,
-    image: post.image,
+    message: newPost.message,
+    sender: newPost.userId,
+    image: newPost.image,
   };
   try {
     let res: any = await PostApi.addPost(data);
     if (res.status == 410) {
+      console.log("status 410 in addPost");
       res = await UserModel.refresh();
       if (!res) {
         // error in refresh
@@ -228,6 +232,8 @@ const addPost = async (post: newPost) => {
       }
       res = await PostApi.addPost(data);
     }
+    console.log("res: ");
+    console.log(res);
     return res;
   } catch (err) {
     console.log("add post fail " + err);

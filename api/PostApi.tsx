@@ -67,15 +67,7 @@ const getAllUserPosts = async (userId: string) => {
 };
 
 const addPost = async (postJson: any) => {
-  const res: any = await apiClient.post("/post", postJson);
-  console.log("in add new post " + res.status);
-  // if (res.status == 401) {
-  //   console.log("in 401 - addPost");
-
-  //   await UserModel.refreshToken();
-  //   return apiClient.post("/post", postJson);
-  // }
-  return res;
+  return await apiClient.post("/post", postJson);
 };
 
 const deletePost = async (postId: String) => {

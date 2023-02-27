@@ -24,6 +24,7 @@ import Login from "./components/Login";
 import apiClient from "./api/ClientApi";
 import Profile from "./components/Profile";
 import Test from "./components/Test";
+import AddPost from "./components/AddPost";
 
 //need to move to different place
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
@@ -128,6 +129,7 @@ const App: FC = () => {
             options={{ headerShown: false }}
           />
           <Tab.Screen name="Profile" component={Profile} />
+          <Tab.Screen name="AddPost" component={AddPost} />
           <Tab.Screen name="Info" component={InfoScreen} />
         </Tab.Navigator>
       </NavigationContainer>
