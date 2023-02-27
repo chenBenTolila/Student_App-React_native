@@ -1,19 +1,36 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiClient from "./ClientApi";
 
 const addUser = async (userJson: any) => {
-  return apiClient.post("/auth/register", userJson);
+  return await apiClient.post("/auth/register", userJson);
 };
 
 const uploadImage = async (image: any) => {
-  return apiClient.post("/file/file", image);
+  return await apiClient.post("/file/file", image);
 };
 
 const loginUser = async (credentials: any) => {
-  return apiClient.post("/auth/login", credentials);
+  return await apiClient.post("/auth/login", credentials);
+};
+
+const getUserById = async (userId: String) => {
+  return await apiClient.get("/auth/" + userId);
+};
+
+const putUserById = async (userId: String, userDetails: any) => {
+  console.log(userId);
+  return await apiClient.put("/auth/" + userId, userDetails);
+};
+
+const refresh = async () => {
+  return await apiClient.get("/auth/refresh");
 };
 
 export default {
   addUser,
   uploadImage,
   loginUser,
+  getUserById,
+  putUserById,
+  refresh,
 };

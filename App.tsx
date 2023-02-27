@@ -22,6 +22,8 @@ import StudentAdd from "./components/StudentAdd";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import apiClient from "./api/ClientApi";
+import Profile from "./components/Profile";
+import Test from "./components/Test";
 
 //need to move to different place
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
@@ -36,17 +38,6 @@ const InfoScreen: FC<{ route: any; navigation: any }> = ({
 };
 
 const LoginStack = createNativeStackNavigator();
-// const LoginStackCp: FC<{ route: any; navigation: any }> = ({
-//   route,
-//   navigation,
-// }) => {
-//   return (
-//     <LoginStack.Navigator>
-//       <LoginStack.Screen name="Login" component={Login} />
-//       <LoginStack.Screen name="Register" component={Register} />
-//     </LoginStack.Navigator>
-//   );
-// };
 
 // can stay here
 const StudentStack = createNativeStackNavigator();
@@ -78,7 +69,7 @@ const StudentStackCp: FC<{ route: any; navigation: any }> = ({
 
 const updateToken = async (setToken: any) => {
   const token = await AsyncStorage.getItem("accessToken");
-  // await AsyncStorage.clear();
+  await AsyncStorage.clear();
   console.log("in update token " + token);
   if (token != null) {
     apiClient.setHeader("Authorization", "JWT " + token);
@@ -136,6 +127,7 @@ const App: FC = () => {
             component={StudentStackCp}
             options={{ headerShown: false }}
           />
+          <Tab.Screen name="Profile" component={Profile} />
           <Tab.Screen name="Info" component={InfoScreen} />
         </Tab.Navigator>
       </NavigationContainer>

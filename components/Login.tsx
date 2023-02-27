@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import UserModel, { User } from "../model/UseModel";
+import UserModel, { User } from "../model/UserModel";
 import apiClient from "../api/ClientApi";
 
 const Login: FC<{ route: any; navigation: any; setToken: any }> = ({

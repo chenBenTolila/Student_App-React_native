@@ -17,15 +17,33 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import FormData from "form-data";
 
 import UserModel, { User } from "../model/UserModel";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Register: FC<{ route: any; navigation: any }> = ({
-  route,
-  navigation,
-}) => {
+const Test: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [avatarUri, setAvatarUri] = useState("");
+
+  const setUserDetails = async () => {
+    const userId: any = await AsyncStorage.getItem("userId");
+    console.log("current UserId:");
+    console.log(userId);
+    if (userId != null) {
+      const res: any = await UserModel.getUserById(userId);
+      if (!res) {
+        console.log("fail to get user");
+        return;
+      }
+      const user: any = res.data;
+      console.log("user: ");
+      console.log(user);
+      console.log("user name - " + user.name);
+      setName(user.name);
+      setAvatarUri(user.imageUrl);
+      setEmail(user.email);
+    }
+  };
 
   const askPermission = async () => {
     try {
@@ -37,9 +55,9 @@ const Register: FC<{ route: any; navigation: any }> = ({
       console.log("ask permission error " + err);
     }
   };
-
   useEffect(() => {
-    askPermission();
+    const uri: string = "http://192.168.1.229:3000/uploads\1677355309637.jpg";
+    setAvatarUri(uri);
   }, []);
 
   const openCamera = async () => {
@@ -66,7 +84,7 @@ const Register: FC<{ route: any; navigation: any }> = ({
     }
   };
 
-  const onRegisterCallback = async () => {
+  const onSaveCallback = async () => {
     // need to add progress bar (called activity indicator)
     console.log("register was pressed");
     const user: User = {
@@ -99,48 +117,9 @@ const Register: FC<{ route: any; navigation: any }> = ({
     <ScrollView>
       <View style={styles.container}>
         <View>
-          {avatarUri == "" && (
-            <Image
-              source={require("../assets/avatar.png")}
-              style={styles.avatar}
-            ></Image>
-          )}
           {avatarUri != "" && (
-            <Image source={{ uri: avatarUri }} style={styles.avatar}></Image>
+            <Image source={{ uri: "avatarUri" }} style={styles.avatar}></Image>
           )}
-
-          <TouchableOpacity onPress={openCamera}>
-            <Ionicons name={"camera"} style={styles.cameraButton} size={50} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={openGallery}>
-            <Ionicons name={"image"} style={styles.galleryButton} size={50} />
-          </TouchableOpacity>
-        </View>
-        <TextInput
-          style={styles.input}
-          onChangeText={setEmail}
-          value={email}
-          placeholder={"Email Address"}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={setName}
-          value={name}
-          placeholder={"Name"}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={setPassword}
-          value={password}
-          placeholder={"password"}
-        />
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={onCancelCallback} style={styles.button}>
-            <Text style={styles.buttonText}>CANCEL</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
-            <Text style={styles.buttonText}>REGISTER</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -198,4 +177,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default Test;
