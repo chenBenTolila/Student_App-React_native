@@ -103,6 +103,8 @@ const putUserById = async (userId: String, userDetails: any) => {
 const refresh = async () => {
   console.log("refresh()");
   const refreshToken = await AsyncStorage.getItem("refreshToken");
+  //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZmRiNzdjZmM3OWMzODU3Z…
+  console.log(refreshToken);
   apiClient.setHeader("Authorization", "JWT " + refreshToken);
 
   const res: any = await AuthApi.refresh();

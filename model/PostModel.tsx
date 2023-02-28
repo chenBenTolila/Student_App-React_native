@@ -119,12 +119,12 @@ export type Post = {
   image: String;
   postId: String;
   userImage: String;
+  // userId: String;
 };
 
-export type newPost = {
-  //TODO - to delete
+export type NewPost = {
   message: String;
-  image: String;
+  imageUrl: String;
 };
 
 const createPostsList = async (res: any) => {
@@ -136,14 +136,17 @@ const createPostsList = async (res: any) => {
     console.log(list);
     for (let i = 0; i < list.length; ++i) {
       console.log("element: " + list[i]._id);
-      const user: any = await UserModel.getUserById(list[i].sender);
-      console.log("user name - " + user.fullName);
+      const userRes: any = await UserModel.getUserById(list[i].sender);
+      const user: any = userRes.data;
+      console.log("user details");
+      console.log(user);
+      console.log("user email - " + user.email);
       const st: Post = {
-        userEmail: user.fullName,
+        userEmail: user.email,
         message: list[i].message,
-        image: list[i].image,
+        image: list[i].imageUrl,
         postId: list[i]._id,
-        userImage: user.image,
+        userImage: user.imageUrl,
       };
       posts.push(st);
     }
@@ -152,14 +155,16 @@ const createPostsList = async (res: any) => {
 };
 
 const getAllPosts = async () => {
-  console.log("getAllPosts()");
+  console.log("getAllPosts()!!");
   let res: any = await PostApi.getAllPosts();
+  console.log("res: ");
+  console.log(res);
   if (res.status == 410) {
     res = await UserModel.refresh();
     if (!res) {
       // error in refresh
       // TODO - need to handle it - maybe logout the user
-      return;
+      return res;
     }
     res = await PostApi.getAllPosts();
   }
@@ -197,17 +202,17 @@ const editPostById = async (postId: String, Post: any) => {
   return res;
 };
 
-const getAllUserPosts = async (userId: string) => {
+const getAllUserPosts = async (sender: string) => {
   console.log("getAllUserPosts()");
-  let res: any = await PostApi.getAllUserPosts(userId);
+  let res: any = await PostApi.getAllUserPosts(sender);
   if (res.status == 410) {
     res = await UserModel.refresh();
     if (!res) {
       // error in refresh
       // TODO - need to handle it - maybe logout the user
-      return;
+      return res;
     }
-    res = await PostApi.getAllUserPosts(userId);
+    res = await PostApi.getAllUserPosts(sender);
   }
   return createPostsList(res);
 };

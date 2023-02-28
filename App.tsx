@@ -25,6 +25,9 @@ import apiClient from "./api/ClientApi";
 import Profile from "./components/Profile";
 import Test from "./components/Test";
 import AddPost from "./components/AddPost";
+import PostsList from "./components/PostsList";
+import MyPostsList from "./components/MyPostsList";
+import EditPost from "./components/EditPost";
 
 //need to move to different place
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
@@ -64,6 +67,60 @@ const StudentStackCp: FC<{ route: any; navigation: any }> = ({
       />
       <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
       <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
+    </StudentStack.Navigator>
+  );
+};
+
+const PostStack = createNativeStackNavigator();
+const PostStackCp: FC<{ route: any; navigation: any }> = ({
+  route,
+  navigation,
+}) => {
+  const addNewPost = () => {
+    navigation.navigate("AddPost");
+  };
+  return (
+    <StudentStack.Navigator>
+      <StudentStack.Screen
+        name="PostsList"
+        component={PostsList}
+        options={{
+          headerRight: () => (
+            <TouchableOpacity onPress={addNewPost}>
+              <Ionicons name={"add-outline"} size={40} color={"gray"} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <StudentStack.Screen name="AddPost" component={AddPost} />
+    </StudentStack.Navigator>
+  );
+};
+
+// TODO - need to add edit post here
+const MyPostsStack = createNativeStackNavigator();
+const MyPostsStackCp: FC<{ route: any; navigation: any }> = ({
+  route,
+  navigation,
+}) => {
+  const addNewPost = () => {
+    navigation.navigate("AddPost");
+  };
+  return (
+    <StudentStack.Navigator>
+      <StudentStack.Screen
+        name="MyPostsList"
+        component={MyPostsList}
+        options={{
+          headerRight: () => (
+            <TouchableOpacity onPress={addNewPost}>
+              <Ionicons name={"add-outline"} size={40} color={"gray"} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <StudentStack.Screen name="AddPost" component={AddPost} />
+      <StudentStack.Screen name="EditPost" component={EditPost} />
     </StudentStack.Navigator>
   );
 };
@@ -128,9 +185,19 @@ const App: FC = () => {
             component={StudentStackCp}
             options={{ headerShown: false }}
           />
+          <Tab.Screen
+            name="PostStackCp"
+            component={PostStackCp}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="MyPostsStackCp"
+            component={MyPostsStackCp}
+            options={{ headerShown: false }}
+          />
           <Tab.Screen name="Profile" component={Profile} />
-          <Tab.Screen name="AddPost" component={AddPost} />
-          <Tab.Screen name="Info" component={InfoScreen} />
+          {/* <Tab.Screen name="AddPost" component={AddPost} />
+          <Tab.Screen name="Info" component={InfoScreen} /> */}
         </Tab.Navigator>
       </NavigationContainer>
     );

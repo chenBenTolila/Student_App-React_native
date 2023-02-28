@@ -26,10 +26,11 @@
 /////////////////////////////////////////////////////////////
 
 import UserModel from "../Model/UserModel";
-import { newPost } from "../Model/postModel";
+//import { newPost } from "../Model/postModel";
 import apiClient from "./ClientApi";
 
 const getAllPosts = async () => {
+  console.log("in getAllPostsApi ");
   const res: any = await apiClient.get("/post");
   console.log("in getAllPosts " + res.status);
 
@@ -45,24 +46,12 @@ const getAllPosts = async () => {
 const getPostById = async (postId: String) => {
   const res: any = await apiClient.get("/post/" + postId);
   console.log("in getPostById ");
-
-  // if (res.status == 401) {
-  //   console.log("in 401 - getPostById");
-  //   await UserModel.refreshToken();
-  //   return apiClient.get("/post/" + postId);
-  // }
   return res;
 };
 
-const getAllUserPosts = async (userId: string) => {
-  const res: any = await apiClient.get("/post?sender=" + userId);
+const getAllUserPosts = async (sender: string) => {
+  const res: any = await apiClient.get("/post?sender=" + sender);
   console.log("in getAllUserPosts " + res.status);
-
-  // if (res.status == 401) {
-  //   console.log("in 401 - getAllUserPosts");
-  //   await UserModel.refreshToken();
-  //   return apiClient.get("/post?sender=" + userId);
-  // }
   return res;
 };
 
@@ -73,19 +62,13 @@ const addPost = async (postJson: any) => {
 const deletePost = async (postId: String) => {
   const res: any = await apiClient.delete("/post/" + postId);
   console.log("in delete post " + res.status);
-  // if (res.status == 401) {
-  //   console.log("in 401 - deletePost");
-
-  //   await UserModel.refreshToken();
-  //   return apiClient.delete("/post/" + postId);
-  // }
   return res;
 };
 
-const editPost = async (postId: String, post: newPost) => {
+const editPost = async (postId: String, editedPost: any) => {
   console.log("********* in postApi *************");
-  console.log(post);
-  const res: any = await apiClient.put("/post/" + postId, post);
+  console.log(editedPost);
+  const res: any = await apiClient.put("/post/" + postId, editedPost);
   console.log("in edit post " + res.status);
   // if (res.status == 401) {
   //   console.log("in 401 - editPost");

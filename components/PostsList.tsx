@@ -18,17 +18,18 @@ import PostModel, { Post } from "../model/PostModel";
 const ListItem: FC<{
   // postId: String;
   userImage: String;
-  userId: String;
+  userEmail: String;
   text: String;
   postImage: String;
   //onPostSelected: (postId: String) => void;
-}> = ({ userId, userImage, text, postImage }) => {
+}> = ({ userEmail, userImage, text, postImage }) => {
   // const onClick = () => {
   //   console.log("int post: post was selected " + postId);
   //   onPostSelected(postId);
   // };
 
   console.log("image: " + postImage);
+  console.log("text: " + text);
   return (
     <TouchableHighlight underlayColor={"gainsboro"}>
       <View style={styles.listRow}>
@@ -44,7 +45,7 @@ const ListItem: FC<{
             source={{ uri: userImage.toString() }}
           />
         )}
-        <Text style={styles.listRowName}>{userId}</Text>
+        <Text style={styles.listRowName}>{userEmail}</Text>
 
         {postImage == "" && (
           <Image
@@ -58,8 +59,7 @@ const ListItem: FC<{
             source={{ uri: postImage.toString() }}
           />
         )}
-        <Text style={styles.listRowName}>{userId}</Text>
-
+        <Text style={styles.listRowName}>{text}</Text>
         {/* <View style={styles.listRowTextContainer}>
           <Text style={styles.listRowName}>{name}</Text>
           <Text style={styles.listRowId}>{id}</Text>
@@ -86,9 +86,9 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
       let posts: Post[] = [];
       try {
         posts = await PostModel.getAllPosts();
-        console.log("fetching students complete");
+        console.log("fetching posts complete");
       } catch (err) {
-        console.log("fail fetching students " + err);
+        console.log("fail fetching posts " + err);
       }
       console.log("fetching finish");
       setPosts(posts);
@@ -103,8 +103,8 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
       keyExtractor={(post) => post.postId.toString()}
       renderItem={({ item }) => (
         <ListItem
-          userId={item.userId}
-          text={item.text}
+          userEmail={item.userEmail}
+          text={item.message}
           postImage={item.image}
           userImage={item.userImage}
         />
