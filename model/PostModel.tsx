@@ -138,8 +138,8 @@ const createPostsList = async (res: any) => {
       console.log("element: " + list[i]._id);
       const userRes: any = await UserModel.getUserById(list[i].sender);
       const user: any = userRes.data;
-      console.log("user details");
-      console.log(user);
+      // console.log("user details");
+      // console.log(user);
       console.log("user email - " + user.email);
       const st: Post = {
         userEmail: user.email,

@@ -41,11 +41,29 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
         return;
       }
       const resData: any = res.data;
+      console.log("res");
+      console.log(res);
+      console.log("res-data");
+      console.log(resData);
       setToken(resData.tokens.accessToken);
-      apiClient.setHeader("Authorization", "JWT " + resData.tokens.accessToken);
-      await AsyncStorage.setItem("accessToken", resData.tokens.accessToken);
+      await apiClient.setHeader(
+        "Authorization",
+        "JWT " + resData.tokens.accessToken
+      );
+
+      await AsyncStorage.setItem("temp", "temp");
       await AsyncStorage.setItem("refreshToken", resData.tokens.refreshToken);
       await AsyncStorage.setItem("userId", resData.userId);
+      await AsyncStorage.setItem("accessToken", resData.tokens.accessToken);
+
+      const token1: any = await AsyncStorage.getItem("accessToken");
+      console.log("my login access token");
+      console.log(token1);
+      console.log("access token without storage");
+      console.log(resData.tokens.accessToken);
+      const rtoken: any = await AsyncStorage.getItem("refreshToken");
+      console.log("my login refresh token");
+      console.log(rtoken);
     } catch (err) {
       console.log("fail to login the user: " + err);
     }

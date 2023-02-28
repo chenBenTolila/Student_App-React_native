@@ -28,6 +28,7 @@ import AddPost from "./components/AddPost";
 import PostsList from "./components/PostsList";
 import MyPostsList from "./components/MyPostsList";
 import EditPost from "./components/EditPost";
+import Chat from "./components/Chat";
 
 //need to move to different place
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
@@ -180,11 +181,11 @@ const App: FC = () => {
             tabBarInactiveTintColor: "gray",
           })}
         >
-          <Tab.Screen
+          {/* <Tab.Screen
             name="StudentStackCp"
             component={StudentStackCp}
             options={{ headerShown: false }}
-          />
+          /> */}
           <Tab.Screen
             name="PostStackCp"
             component={PostStackCp}
@@ -196,6 +197,7 @@ const App: FC = () => {
             options={{ headerShown: false }}
           />
           <Tab.Screen name="Profile" component={Profile} />
+          <Tab.Screen name="Chat" component={Chat} />
           {/* <Tab.Screen name="AddPost" component={AddPost} />
           <Tab.Screen name="Info" component={InfoScreen} /> */}
         </Tab.Navigator>
