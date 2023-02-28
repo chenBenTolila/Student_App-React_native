@@ -25,6 +25,7 @@ const ListItem: FC<{
 }> = ({ name, description, image, userImage, postId, onDelete, onEdit }) => {
   const onDeletePress = async () => {
     try {
+      console.log("in delete post");
       const res = await PostModel.deletePost(postId);
       console.log("deleted");
       onDelete();
