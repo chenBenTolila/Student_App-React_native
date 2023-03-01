@@ -88,7 +88,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     console.log("my token");
     console.log(token);
     //פתיחת סוקט ללקוח
-    socket = Client("http://192.168.1.103:3000", {
+    socket = Client("http://192.168.1.229:3000", {
       auth: {
         token: "barrer " + token,
       },
@@ -110,6 +110,11 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
       //     setNewMessage("");
       // });
       console.log("test chat send message");
+
+      if (newMessage == "") {
+        console.log("message is empty");
+        return;
+      }
 
       socket.emit("chat:send_message", {
         message: newMessage,

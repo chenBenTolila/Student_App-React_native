@@ -76,6 +76,13 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
 
   const onSaveCallback = async () => {
     console.log("button was pressed");
+    // TODO - need to check that the post and text are not empty!!!!!!!!!!!!!!!
+
+    if (imageUri == "" || postDescription == "") {
+      //setErrorMessage("please provide text and image");
+      return;
+    }
+
     const post: NewPost = {
       message: postDescription,
       imageUrl: "",

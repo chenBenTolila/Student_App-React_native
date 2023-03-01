@@ -69,6 +69,12 @@ const Register: FC<{ route: any; navigation: any }> = ({
   const onRegisterCallback = async () => {
     // need to add progress bar (called activity indicator)
     console.log("register was pressed");
+
+    if (email == "" || name == "" || password == "") {
+      // setErrorMessage("please provide text and image");
+      return;
+    }
+
     const user: User = {
       email: email,
       name: name,

@@ -21,9 +21,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DefaultPassword = "********";
 
-const Profile: FC<{ route: any; navigation: any }> = ({
+const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
   route,
   navigation,
+  setToken,
 }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -94,6 +95,12 @@ const Profile: FC<{ route: any; navigation: any }> = ({
   const onSaveCallback = async () => {
     // need to add progress bar (called activity indicator)
     console.log("save was pressed");
+
+    if (email == "" || name == "" || password == "") {
+      // setErrorMessage("please provide text and image");
+      return;
+    }
+
     let newDetails;
     if (password != DefaultPassword) {
       newDetails = {
@@ -134,9 +141,17 @@ const Profile: FC<{ route: any; navigation: any }> = ({
     navigation.goBack();
   };
 
-  const onCancelCallback = () => {
-    console.log("cancel was pressed");
-    navigation.goBack();
+  const onLogoutCallback = async () => {
+    console.log("logout was pressed");
+    const userId: any = await AsyncStorage.getItem("userId");
+    if (userId != null) {
+      const res: any = await UserModel.logout();
+      if (res) {
+        setToken();
+      }
+    }
+    // TODO - need to set access token - so the user will be logged out from the app
+    // navigation.goBack();
   };
 
   return (
@@ -184,6 +199,9 @@ const Profile: FC<{ route: any; navigation: any }> = ({
             <Text style={styles.buttonText}>SAVE</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={onLogoutCallback} style={styles.button}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

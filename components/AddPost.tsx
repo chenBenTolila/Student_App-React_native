@@ -25,6 +25,7 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
 }) => {
   const [imageUri, setImageUri] = useState("");
   const [text, setText] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   // const [userId, setUserId] = useState("")
 
   const askPermission = async () => {
@@ -68,9 +69,15 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
 
   const onSaveCallback = async () => {
     // TODO - need to add progress bar (called activity indicator)
-    // TODO - need to check that the post and text are not empty
+    // TODO - need to check that the post and text are not empty!!!!!!!!!!!!!!!
 
     console.log("save was pressed");
+
+    if (imageUri == "" || text == "") {
+      setErrorMessage("please provide text and image");
+      return;
+    }
+
     const userId: any = await AsyncStorage.getItem("userId");
 
     const newPost = {
@@ -126,6 +133,8 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
           value={text}
           placeholder={"Text"}
         />
+        {/* ErrorMessage &&
+        {<Text style={styles.buttonText}>please provide text and image</Text>} */}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={onCancelCallback} style={styles.button}>
             <Text style={styles.buttonText}>CANCEL</Text>
@@ -153,6 +162,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
+    height: 40,
+    margin: 12, // for space between the imput texts
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 3,
+  },
+  errMsg: {
     height: 40,
     margin: 12, // for space between the imput texts
     borderWidth: 1,

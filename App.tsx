@@ -196,7 +196,15 @@ const App: FC = () => {
             component={MyPostsStackCp}
             options={{ headerShown: false }}
           />
-          <Tab.Screen name="Profile" component={Profile} />
+          <Tab.Screen name="Profile">
+            {(props) => (
+              <Profile
+                route={props.route}
+                navigation={props.navigation}
+                setToken={setToken}
+              />
+            )}
+          </Tab.Screen>
           <Tab.Screen name="Chat" component={Chat} />
           {/* <Tab.Screen name="AddPost" component={AddPost} />
           <Tab.Screen name="Info" component={InfoScreen} /> */}

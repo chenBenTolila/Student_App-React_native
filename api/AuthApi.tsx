@@ -13,6 +13,10 @@ const loginUser = async (credentials: any) => {
   return await apiClient.post("/auth/login", credentials);
 };
 
+const logout = async () => {
+  return await apiClient.get("/auth/logout");
+};
+
 const getUserById = async (userId: String) => {
   return await apiClient.get("/auth/" + userId);
 };
@@ -33,4 +37,5 @@ export default {
   getUserById,
   putUserById,
   refresh,
+  logout,
 };

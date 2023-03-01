@@ -24,10 +24,22 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", async () => {
+      console.log("focusin login");
+      cleanScreen();
+    });
+    return unsubscribe;
+  });
+
   const onLoginCallback = async () => {
     // TODO - need to add progress bar (called activity indicator)
     console.log("login was pressed");
     // TODO - check if the credentials are empty
+    if (email == "" || password == "") {
+      return;
+    }
+
     try {
       const res: any = await UserModel.loginUser(email, password);
       console.log("after login request ");
@@ -51,6 +63,8 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
         "JWT " + resData.tokens.accessToken
       );
 
+      // TODO - need to add the temp when doing refrresh token too
+      // TODO - need to add logout when the refreshing the tokens fails
       await AsyncStorage.setItem("temp", "temp");
       await AsyncStorage.setItem("refreshToken", resData.tokens.refreshToken);
       await AsyncStorage.setItem("userId", resData.userId);
@@ -73,6 +87,11 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
   const onRegisterCallback = () => {
     console.log("register was pressed");
     navigation.navigate("Register");
+  };
+
+  const cleanScreen = () => {
+    setEmail("");
+    setPassword("");
   };
 
   return (

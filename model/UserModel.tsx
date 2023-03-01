@@ -65,6 +65,23 @@ const loginUser = async (email: String, password: String) => {
   }
 };
 
+const logout = async () => {
+  const refreshToken = await AsyncStorage.getItem("refreshToken");
+  console.log(refreshToken);
+  apiClient.setHeader("Authorization", "JWT " + refreshToken);
+  try {
+    console.log("sent logout req");
+    const res: any = await AuthApi.logout();
+    await AsyncStorage.setItem("accessToken", "");
+    await AsyncStorage.setItem("refreshToken", "");
+    return res;
+    // TODO - return the status to the app so I can handle it in the screen
+  } catch (err) {
+    console.log("fail logout: " + err);
+    return null;
+  }
+};
+
 const getUserById = async (userId: String) => {
   console.log("getUserById()");
   let res = await AuthApi.getUserById(userId);
@@ -131,4 +148,5 @@ export default {
   getUserById,
   putUserById,
   refresh,
+  logout,
 };
