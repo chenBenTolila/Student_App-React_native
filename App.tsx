@@ -38,34 +38,6 @@ const InfoScreen: FC<{ route: any; navigation: any }> = ({
 
 const LoginStack = createNativeStackNavigator();
 
-// // can stay here
-// const StudentStack = createNativeStackNavigator();
-// const StudentStackCp: FC<{ route: any; navigation: any }> = ({
-//   route,
-//   navigation,
-// }) => {
-//   const addNewStudents = () => {
-//     navigation.navigate("StudentAdd");
-//   };
-//   return (
-//     <StudentStack.Navigator>
-//       <StudentStack.Screen
-//         name="StudentList"
-//         component={StudentList}
-//         options={{
-//           headerRight: () => (
-//             <TouchableOpacity onPress={addNewStudents}>
-//               <Ionicons name={"add-outline"} size={40} color={"#006B6B"} />
-//             </TouchableOpacity>
-//           ),
-//         }}
-//       />
-//       <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
-//       <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
-//     </StudentStack.Navigator>
-//   );
-// };
-
 const PostStack = createNativeStackNavigator();
 const PostStackCp: FC<{ route: any; navigation: any }> = ({
   route,
@@ -121,7 +93,7 @@ const MyPostsStackCp: FC<{ route: any; navigation: any }> = ({
 };
 
 const updateToken = async (setToken: any) => {
-  await AsyncStorage.clear();
+  //await AsyncStorage.clear();
   const token = await AsyncStorage.getItem("accessToken");
   console.log("in update token " + token);
   if (token != null) {

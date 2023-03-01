@@ -25,6 +25,7 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
   const [postDescription, setPostDescription] = useState("");
   const [imageUri, setImageUri] = useState("");
   const [showActivityIndicator, setShowActivityIndicator] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   let postId = route.params.postId;
 
   const setDetails = async () => {
@@ -54,6 +55,7 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
     const unsubscribe = navigation.addListener("focus", async () => {
       setShowActivityIndicator(true);
       console.log("focusin");
+      setErrorMsg("");
       setDetails();
       setShowActivityIndicator(false);
     });
@@ -86,10 +88,9 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
   const onSaveCallback = async () => {
     console.log("button was pressed");
     setShowActivityIndicator(true);
-    // TODO - need to check that the post and text are not empty!!!!!!!!!!!!!!!
 
     if (imageUri == "" || postDescription == "") {
-      //setErrorMessage("please provide text and image");
+      setErrorMsg("please provide text and image");
       setShowActivityIndicator(false);
       return;
     }
@@ -167,6 +168,17 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
             <Text style={styles.buttonText}>SAVE</Text>
           </TouchableOpacity>
         </View>
+        {errorMsg != "" && (
+          <Text
+            style={{
+              fontSize: 20,
+              color: "red",
+              alignSelf: "center",
+            }}
+          >
+            {errorMsg}
+          </Text>
+        )}
       </View>
     </ScrollView>
   );

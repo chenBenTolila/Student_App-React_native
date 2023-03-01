@@ -82,9 +82,6 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
   };
 
   const onSaveCallback = async () => {
-    // TODO - need to add progress bar (called activity indicator)
-    // TODO - need to check that the post and text are not empty!!!!!!!!!!!!!!!
-
     console.log("save was pressed");
     setShowActivityIndicator(true);
 

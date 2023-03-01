@@ -30,6 +30,7 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
   const [password, setPassword] = useState(DefaultPassword);
   const [avatarUri, setAvatarUri] = useState("");
   const [showActivityIndicator, setShowActivityIndicator] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const setUserDetails = async () => {
     const userId: any = await AsyncStorage.getItem("userId");
@@ -66,6 +67,7 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
     const unsubscribe = navigation.addListener("focus", async () => {
       setShowActivityIndicator(true);
       console.log("focusing");
+      setErrorMsg("");
       setUserDetails();
       setShowActivityIndicator(false);
     });
@@ -105,6 +107,7 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
 
     if (email == "" || name == "" || password == "") {
       // setErrorMessage("please provide text and image");
+      setErrorMsg("please provide name and password");
       setShowActivityIndicator(false);
       return;
     }
@@ -147,6 +150,7 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
       console.log("fail adding user: " + err);
     }
     setShowActivityIndicator(false);
+    setErrorMsg("");
     //navigation.goBack();
   };
 
@@ -217,6 +221,17 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
         <TouchableOpacity onPress={onLogoutCallback} style={styles.button}>
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
+        {errorMsg != "" && (
+          <Text
+            style={{
+              fontSize: 20,
+              color: "red",
+              alignSelf: "center",
+            }}
+          >
+            {errorMsg}
+          </Text>
+        )}
       </View>
     </ScrollView>
   );
