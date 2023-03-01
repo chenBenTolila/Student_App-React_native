@@ -242,9 +242,12 @@ const Register: FC<{ route: any; navigation: any }> = ({
             <Text style={styles.buttonText}>REGISTER</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={onGoogleCallback}>
-          <Ionicons name="md-logo-google" size={24} color="black" />
-        </TouchableOpacity>
+        <View>
+          <Text style={styles.text}>Register with Google</Text>
+          <TouchableOpacity onPress={onGoogleCallback} style={styles.icon}>
+            <Ionicons name="md-logo-google" size={24} color="#006B6B" />
+          </TouchableOpacity>
+        </View>
         {errorMsg != "" && (
           <Text
             style={{
@@ -309,6 +312,16 @@ const styles = StyleSheet.create({
     right: 10,
     width: 50,
     height: 50,
+  },
+  icon: {
+    flexDirection: "row",
+    alignSelf: "center",
+  },
+  text: {
+    textAlign: "center",
+    color: "#006B6B",
+    fontWeight: "bold",
+    fontSize: 20,
   },
 });
 

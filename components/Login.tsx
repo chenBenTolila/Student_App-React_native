@@ -39,9 +39,7 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
   }, []);
 
   const onLoginCallback = async () => {
-    // TODO - need to add progress bar (called activity indicator)
     console.log("login was pressed");
-    // TODO - check if the credentials are empty
     setShowActivityIndicator(true);
     if (email == "") {
       setShowActivityIndicator(false);
@@ -77,8 +75,6 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
         "JWT " + resData.tokens.accessToken
       );
 
-      // TODO - need to add the temp when doing refrresh token too
-      // TODO - need to add logout when the refreshing the tokens fails
       await AsyncStorage.setItem("temp", "temp");
       await AsyncStorage.setItem("refreshToken", resData.tokens.refreshToken);
       await AsyncStorage.setItem("userId", resData.userId);

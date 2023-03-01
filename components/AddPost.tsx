@@ -26,7 +26,7 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
 }) => {
   const [imageUri, setImageUri] = useState("");
   const [text, setText] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   const askPermission = async () => {
@@ -50,6 +50,7 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
     const unsubscribe = navigation.addListener("focus", async () => {
       console.log("focusin login");
       setShowActivityIndicator(true);
+      setErrorMsg("");
       cleanScreen();
       setShowActivityIndicator(false);
     });
@@ -88,7 +89,7 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
     setShowActivityIndicator(true);
 
     if (imageUri == "" || text == "") {
-      setErrorMessage("please provide text and image");
+      setErrorMsg("please provide image and text");
       setShowActivityIndicator(false);
       return;
     }
@@ -157,8 +158,6 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
           value={text}
           placeholder={"Text"}
         />
-        {/* ErrorMessage &&
-        {<Text style={styles.buttonText}>please provide text and image</Text>} */}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={onCancelCallback} style={styles.button}>
             <Text style={styles.buttonText}>CANCEL</Text>
@@ -167,6 +166,17 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
             <Text style={styles.buttonText}>SAVE</Text>
           </TouchableOpacity>
         </View>
+        {errorMsg != "" && (
+          <Text
+            style={{
+              fontSize: 20,
+              color: "red",
+              alignSelf: "center",
+            }}
+          >
+            {errorMsg}
+          </Text>
+        )}
       </View>
     </ScrollView>
   );
@@ -207,7 +217,7 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 12,
     padding: 12,
-    backgroundColor: "blue",
+    backgroundColor: "#009999",
     borderRadius: 10,
   },
   buttonText: {

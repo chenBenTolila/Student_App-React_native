@@ -211,7 +211,7 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
         />
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={onSaveCallback} style={styles.button}>
-            <Text style={styles.buttonText}>SAVE</Text>
+            <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={onLogoutCallback} style={styles.button}>
@@ -243,19 +243,21 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   buttonsContainer: {
-    //flex: 1,
+    flex: 1,
     flexDirection: "row",
   },
   button: {
-    flex: 1,
     margin: 12,
     padding: 12,
-    backgroundColor: "blue",
+    marginLeft: 100,
+    width: 200,
+    backgroundColor: "#009999",
     borderRadius: 10,
   },
   buttonText: {
     textAlign: "center",
     color: "white",
+    fontSize: 20,
   },
   cameraButton: {
     position: "absolute",

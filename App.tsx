@@ -38,33 +38,33 @@ const InfoScreen: FC<{ route: any; navigation: any }> = ({
 
 const LoginStack = createNativeStackNavigator();
 
-// can stay here
-const StudentStack = createNativeStackNavigator();
-const StudentStackCp: FC<{ route: any; navigation: any }> = ({
-  route,
-  navigation,
-}) => {
-  const addNewStudents = () => {
-    navigation.navigate("StudentAdd");
-  };
-  return (
-    <StudentStack.Navigator>
-      <StudentStack.Screen
-        name="StudentList"
-        component={StudentList}
-        options={{
-          headerRight: () => (
-            <TouchableOpacity onPress={addNewStudents}>
-              <Ionicons name={"add-outline"} size={40} color={"gray"} />
-            </TouchableOpacity>
-          ),
-        }}
-      />
-      <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
-      <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
-    </StudentStack.Navigator>
-  );
-};
+// // can stay here
+// const StudentStack = createNativeStackNavigator();
+// const StudentStackCp: FC<{ route: any; navigation: any }> = ({
+//   route,
+//   navigation,
+// }) => {
+//   const addNewStudents = () => {
+//     navigation.navigate("StudentAdd");
+//   };
+//   return (
+//     <StudentStack.Navigator>
+//       <StudentStack.Screen
+//         name="StudentList"
+//         component={StudentList}
+//         options={{
+//           headerRight: () => (
+//             <TouchableOpacity onPress={addNewStudents}>
+//               <Ionicons name={"add-outline"} size={40} color={"#006B6B"} />
+//             </TouchableOpacity>
+//           ),
+//         }}
+//       />
+//       <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
+//       <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
+//     </StudentStack.Navigator>
+//   );
+// };
 
 const PostStack = createNativeStackNavigator();
 const PostStackCp: FC<{ route: any; navigation: any }> = ({
@@ -75,8 +75,8 @@ const PostStackCp: FC<{ route: any; navigation: any }> = ({
     navigation.navigate("AddPost");
   };
   return (
-    <StudentStack.Navigator>
-      <StudentStack.Screen
+    <PostStack.Navigator>
+      <PostStack.Screen
         name="PostsList"
         component={PostsList}
         options={{
@@ -87,8 +87,8 @@ const PostStackCp: FC<{ route: any; navigation: any }> = ({
           ),
         }}
       />
-      <StudentStack.Screen name="AddPost" component={AddPost} />
-    </StudentStack.Navigator>
+      <PostStack.Screen name="AddPost" component={AddPost} />
+    </PostStack.Navigator>
   );
 };
 
@@ -102,8 +102,8 @@ const MyPostsStackCp: FC<{ route: any; navigation: any }> = ({
     navigation.navigate("AddPost");
   };
   return (
-    <StudentStack.Navigator>
-      <StudentStack.Screen
+    <MyPostsStack.Navigator>
+      <MyPostsStack.Screen
         name="MyPostsList"
         component={MyPostsList}
         options={{
@@ -114,14 +114,14 @@ const MyPostsStackCp: FC<{ route: any; navigation: any }> = ({
           ),
         }}
       />
-      <StudentStack.Screen name="AddPost" component={AddPost} />
-      <StudentStack.Screen name="EditPost" component={EditPost} />
-    </StudentStack.Navigator>
+      <MyPostsStack.Screen name="AddPost" component={AddPost} />
+      <MyPostsStack.Screen name="EditPost" component={EditPost} />
+    </MyPostsStack.Navigator>
   );
 };
 
 const updateToken = async (setToken: any) => {
-  // await AsyncStorage.clear();
+  await AsyncStorage.clear();
   const token = await AsyncStorage.getItem("accessToken");
   console.log("in update token " + token);
   if (token != null) {
