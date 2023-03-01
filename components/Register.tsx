@@ -10,6 +10,7 @@ import {
   Alert,
   TextInput,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -26,6 +27,24 @@ const Register: FC<{ route: any; navigation: any }> = ({
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [avatarUri, setAvatarUri] = useState("");
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", async () => {
+      setShowActivityIndicator(true);
+      console.log("focusin login");
+      cleanScreen();
+      setShowActivityIndicator(false);
+    });
+    return unsubscribe;
+  });
+
+  const cleanScreen = () => {
+    setEmail("");
+    setName("");
+    setPassword("");
+    setAvatarUri("");
+  };
 
   const askPermission = async () => {
     try {
@@ -69,9 +88,11 @@ const Register: FC<{ route: any; navigation: any }> = ({
   const onRegisterCallback = async () => {
     // need to add progress bar (called activity indicator)
     console.log("register was pressed");
+    setShowActivityIndicator(true);
 
     if (email == "" || name == "" || password == "") {
       // setErrorMessage("please provide text and image");
+      setShowActivityIndicator(false);
       return;
     }
 
@@ -90,10 +111,11 @@ const Register: FC<{ route: any; navigation: any }> = ({
       }
       console.log("saving user");
       await UserModel.addUser(user);
+      navigation.goBack();
     } catch (err) {
       console.log("fail adding user: " + err);
     }
-    navigation.goBack();
+    //navigation.goBack();
   };
 
   const onCancelCallback = () => {
@@ -104,6 +126,12 @@ const Register: FC<{ route: any; navigation: any }> = ({
   return (
     <ScrollView>
       <View style={styles.container}>
+        <ActivityIndicator
+          color={"#93D1C1"}
+          size={130}
+          animating={showActivityIndicator}
+          style={{ position: "absolute", marginTop: 270, marginStart: 140 }}
+        />
         <View>
           {avatarUri == "" && (
             <Image
@@ -181,7 +209,7 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 12,
     padding: 12,
-    backgroundColor: "blue",
+    backgroundColor: "#009999",
     borderRadius: 10,
   },
   buttonText: {

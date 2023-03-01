@@ -72,8 +72,7 @@ const logout = async () => {
   try {
     console.log("sent logout req");
     const res: any = await AuthApi.logout();
-    await AsyncStorage.setItem("accessToken", "");
-    await AsyncStorage.setItem("refreshToken", "");
+    await AsyncStorage.clear();
     return res;
     // TODO - return the status to the app so I can handle it in the screen
   } catch (err) {

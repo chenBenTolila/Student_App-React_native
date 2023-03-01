@@ -11,59 +11,52 @@ import {
   TextInput,
   FlatList,
   TouchableHighlight,
+  ActivityIndicator,
 } from "react-native";
 
 import PostModel, { Post } from "../model/PostModel";
 
 const ListItem: FC<{
-  // postId: String;
   userImage: String;
   userEmail: String;
   text: String;
   postImage: String;
-  //onPostSelected: (postId: String) => void;
 }> = ({ userEmail, userImage, text, postImage }) => {
-  // const onClick = () => {
-  //   console.log("int post: post was selected " + postId);
-  //   onPostSelected(postId);
-  // };
-
   console.log("image: " + postImage);
   console.log("text: " + text);
   return (
     <TouchableHighlight underlayColor={"gainsboro"}>
-      <View style={styles.listRow}>
-        {userImage == "" && (
-          <Image
-            style={styles.listRowImage}
-            source={require("../assets/avatar.png")}
-          />
-        )}
-        {userImage != "" && (
-          <Image
-            style={styles.listRowImage}
-            source={{ uri: userImage.toString() }}
-          />
-        )}
-        <Text style={styles.listRowName}>{userEmail}</Text>
-
-        {postImage == "" && (
-          <Image
-            style={styles.listRowImage}
-            source={require("../assets/avatar.png")}
-          />
-        )}
-        {postImage != "" && (
-          <Image
-            style={styles.listRowImage}
-            source={{ uri: postImage.toString() }}
-          />
-        )}
-        <Text style={styles.listRowName}>{text}</Text>
-        {/* <View style={styles.listRowTextContainer}>
-          <Text style={styles.listRowName}>{name}</Text>
-          <Text style={styles.listRowId}>{id}</Text>
-        </View> */}
+      <View style={styles.list}>
+        <View style={styles.listRow}>
+          {userImage == "" && (
+            <Image
+              style={styles.listRowImage}
+              source={require("../assets/avatar.png")}
+            />
+          )}
+          {userImage != "" && (
+            <Image
+              style={styles.listRowImage}
+              source={{ uri: userImage.toString() }}
+            />
+          )}
+          <Text style={styles.listRowName}>{userEmail}</Text>
+        </View>
+        <View style={styles.listRowTextContainer}>
+          {postImage == "" && (
+            <Image
+              style={styles.listRowImage}
+              source={require("../assets/avatar.png")}
+            />
+          )}
+          {postImage != "" && (
+            <Image
+              style={styles.postImage}
+              source={{ uri: postImage.toString() }}
+            />
+          )}
+          <Text style={styles.listRowName}>{text}</Text>
+        </View>
       </View>
     </TouchableHighlight>
   );
@@ -73,16 +66,13 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
   route,
   navigation,
 }) => {
-  const onPostSelected = (id: String) => {
-    console.log("in the list: row was selected " + id);
-    //navigation.navigate("StudentDetails", { studentId: id });
-  };
-
   const [posts, setPosts] = useState<Array<Post>>();
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
       console.log("focus");
+      setShowActivityIndicator(true);
       let posts: Post[] = [];
       try {
         posts = await PostModel.getAllPosts();
@@ -92,35 +82,49 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
       }
       console.log("fetching finish");
       setPosts(posts);
+      setShowActivityIndicator(false);
     });
     return unsubscribe;
   });
 
   return (
-    <FlatList
-      style={styles.flatlist}
-      data={posts}
-      keyExtractor={(post) => post.postId.toString()}
-      renderItem={({ item }) => (
-        <ListItem
-          userEmail={item.userEmail}
-          text={item.message}
-          postImage={item.image}
-          userImage={item.userImage}
-        />
-      )}
-    ></FlatList>
+    <View style={styles.container}>
+      <FlatList
+        style={styles.flatlist}
+        data={posts}
+        keyExtractor={(post) => post.postId.toString()}
+        renderItem={({ item }) => (
+          <ListItem
+            userEmail={item.userEmail}
+            text={item.message}
+            postImage={item.image}
+            userImage={item.userImage}
+          />
+        )}
+      ></FlatList>
+      <ActivityIndicator
+        color={"#93D1C1"}
+        size={180}
+        animating={showActivityIndicator}
+        style={{ position: "absolute", marginTop: 150, marginStart: 120 }}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: StatusBar.currentHeight,
+    //marginTop: StatusBar.currentHeight,
     flex: 1,
-    backgroundColor: "grey",
   },
   flatlist: {
     flex: 1,
+  },
+  list: {
+    margin: 4,
+    flex: 1,
+    elevation: 1,
+    borderRadius: 2,
   },
   listRow: {
     margin: 4,
@@ -145,6 +149,11 @@ const styles = StyleSheet.create({
   },
   listRowId: {
     fontSize: 25,
+  },
+  postImage: {
+    height: 320,
+    width: 320,
+    alignSelf: "center",
   },
 });
 

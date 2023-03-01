@@ -10,11 +10,10 @@ import {
   Alert,
   TextInput,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
-import FormData from "form-data";
 
 import UserModel, { User } from "../model/UserModel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,6 +29,7 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
   const [name, setName] = useState("");
   const [password, setPassword] = useState(DefaultPassword);
   const [avatarUri, setAvatarUri] = useState("");
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   const setUserDetails = async () => {
     const userId: any = await AsyncStorage.getItem("userId");
@@ -62,8 +62,14 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
     }
   };
   useEffect(() => {
-    setUserDetails();
     askPermission();
+    const unsubscribe = navigation.addListener("focus", async () => {
+      setShowActivityIndicator(true);
+      console.log("focusing");
+      setUserDetails();
+      setShowActivityIndicator(false);
+    });
+    return unsubscribe;
   }, []);
 
   const openCamera = async () => {
@@ -95,9 +101,11 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
   const onSaveCallback = async () => {
     // need to add progress bar (called activity indicator)
     console.log("save was pressed");
+    setShowActivityIndicator(true);
 
     if (email == "" || name == "" || password == "") {
       // setErrorMessage("please provide text and image");
+      setShowActivityIndicator(false);
       return;
     }
 
@@ -138,7 +146,8 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
     } catch (err) {
       console.log("fail adding user: " + err);
     }
-    navigation.goBack();
+    setShowActivityIndicator(false);
+    //navigation.goBack();
   };
 
   const onLogoutCallback = async () => {
@@ -157,6 +166,12 @@ const Profile: FC<{ route: any; navigation: any; setToken: any }> = ({
   return (
     <ScrollView>
       <View style={styles.container}>
+        <ActivityIndicator
+          color={"#93D1C1"}
+          size={130}
+          animating={showActivityIndicator}
+          style={{ position: "absolute", marginTop: 230, marginStart: 140 }}
+        />
         <View>
           {avatarUri == "" && (
             <Image

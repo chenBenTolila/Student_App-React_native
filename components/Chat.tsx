@@ -12,6 +12,7 @@ import {
   StatusBar,
   FlatList,
   TouchableHighlight,
+  ActivityIndicator,
 } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -72,6 +73,7 @@ const ListItem: FC<{
 const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
   const [messages, setMessages] = useState<Array<Message>>();
   const [newMessage, setNewMessage] = useState("");
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   const clientSocketConnect = (
     clientSocket: Socket<DefaultEventsMap, DefaultEventsMap>
@@ -147,6 +149,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
   };
 
   const fetchMessages = (socket: any) => {
+    setShowActivityIndicator(true);
     socket.once("chat:get_all.response", async (arg: any) => {
       //TODO - set list
       console.log("list of messages");
@@ -157,6 +160,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     console.log("test chat get all messages");
     console.log(socket.id);
     socket.emit("chat:get_all");
+    setShowActivityIndicator(false);
   };
 
   const updateUserId = async () => {
@@ -168,6 +172,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     updateUserId();
     const subscribe = navigation.addListener("focus", async () => {
       console.log("focus");
+      setShowActivityIndicator(true);
       socket = await connectUser();
       //Register to each time that essage sent in the room
       socket.on("chat:message", (arg) => {
@@ -178,6 +183,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
       if (socket != undefined) {
         fetchMessages(socket);
       }
+      setShowActivityIndicator(false);
     });
 
     const unsubscribe = navigation.addListener("blur", () => {
@@ -214,6 +220,12 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
           <Ionicons name={"send"} style={styles.button} size={40}></Ionicons>
         </TouchableOpacity>
       </View>
+      <ActivityIndicator
+        color={"#93D1C1"}
+        size={180}
+        animating={showActivityIndicator}
+        style={{ position: "absolute", marginTop: 150, marginStart: 120 }}
+      />
     </View>
   );
 };

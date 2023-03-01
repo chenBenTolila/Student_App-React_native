@@ -10,6 +10,7 @@ import {
   Alert,
   TextInput,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,11 +24,14 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
       console.log("focusin login");
+      setShowActivityIndicator(true);
       cleanScreen();
+      setShowActivityIndicator(false);
     });
     return unsubscribe;
   });
@@ -36,7 +40,9 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
     // TODO - need to add progress bar (called activity indicator)
     console.log("login was pressed");
     // TODO - check if the credentials are empty
+    setShowActivityIndicator(true);
     if (email == "" || password == "") {
+      setShowActivityIndicator(false);
       return;
     }
 
@@ -46,17 +52,15 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
       console.log(res);
       if (!res) {
         console.log("fail to login");
+        setShowActivityIndicator(false);
         return;
       }
       if (res.status != 200) {
         console.log("returned status 400");
+        setShowActivityIndicator(false);
         return;
       }
       const resData: any = res.data;
-      console.log("res");
-      console.log(res);
-      console.log("res-data");
-      console.log(resData);
       setToken(resData.tokens.accessToken);
       await apiClient.setHeader(
         "Authorization",
@@ -70,18 +74,11 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
       await AsyncStorage.setItem("userId", resData.userId);
       await AsyncStorage.setItem("accessToken", resData.tokens.accessToken);
 
-      const token1: any = await AsyncStorage.getItem("accessToken");
-      console.log("my login access token");
-      console.log(token1);
-      console.log("access token without storage");
-      console.log(resData.tokens.accessToken);
-      const rtoken: any = await AsyncStorage.getItem("refreshToken");
-      console.log("my login refresh token");
-      console.log(rtoken);
+      setShowActivityIndicator(false);
     } catch (err) {
       console.log("fail to login the user: " + err);
     }
-    // navigation.goBack();
+    setShowActivityIndicator(false);
   };
 
   const onRegisterCallback = () => {
@@ -95,40 +92,45 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text>Login To the App</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={setEmail}
-          value={email}
-          placeholder={"Email Address"}
-        />
+    <View style={styles.container}>
+      <ActivityIndicator
+        color={"#93D1C1"}
+        size={130}
+        animating={showActivityIndicator}
+        style={{ position: "absolute", marginTop: 190, marginStart: 140 }}
+      />
+      <Text>Login To the App</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={setEmail}
+        value={email}
+        placeholder={"Email Address"}
+      />
 
-        <TextInput
-          style={styles.input}
-          onChangeText={setPassword}
-          value={password}
-          placeholder={"password"}
-        />
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={onLoginCallback} style={styles.button}>
-            <Text style={styles.buttonText}>LOGIN</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
-            <Text style={styles.buttonText}>Register to the App</Text>
-          </TouchableOpacity>
-        </View>
+      <TextInput
+        style={styles.input}
+        onChangeText={setPassword}
+        value={password}
+        placeholder={"password"}
+      />
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity onPress={onLoginCallback} style={styles.button}>
+          <Text style={styles.buttonText}>LOGIN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
+          <Text style={styles.buttonText}>Register to the App</Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    //marginTop: StatusBar.currentHeight,
+    marginTop: StatusBar.currentHeight,
     flex: 1,
-    //backgroundColor: "grey",
+    //alignItems: "center",
+    // backgroundColor: "grey",
   },
   avatar: {
     height: 200,

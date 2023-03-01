@@ -12,6 +12,7 @@ import {
   TextInput,
   StatusBar,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
@@ -23,6 +24,7 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
 }) => {
   const [postDescription, setPostDescription] = useState("");
   const [imageUri, setImageUri] = useState("");
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
   let postId = route.params.postId;
 
   const setDetails = async () => {
@@ -48,7 +50,14 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
   };
   React.useEffect(() => {
     askPermission();
-    setDetails();
+
+    const unsubscribe = navigation.addListener("focus", async () => {
+      setShowActivityIndicator(true);
+      console.log("focusin");
+      setDetails();
+      setShowActivityIndicator(false);
+    });
+    return unsubscribe;
   }, []);
 
   const openCamera = async () => {
@@ -76,10 +85,12 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
 
   const onSaveCallback = async () => {
     console.log("button was pressed");
+    setShowActivityIndicator(true);
     // TODO - need to check that the post and text are not empty!!!!!!!!!!!!!!!
 
     if (imageUri == "" || postDescription == "") {
       //setErrorMessage("please provide text and image");
+      setShowActivityIndicator(false);
       return;
     }
 
@@ -95,9 +106,11 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
       }
       await PostModel.editPostById(postId, post);
       console.log("posted");
+      setShowActivityIndicator(false);
     } catch (err) {
       console.log("fail updating post");
     }
+    setShowActivityIndicator(false);
     navigation.goBack();
   };
   const onCancleCallback = () => {
@@ -107,6 +120,12 @@ const EditPost: FC<{ route: any; navigation: any }> = ({
   return (
     <ScrollView>
       <View style={styles.container}>
+        <ActivityIndicator
+          color={"#93D1C1"}
+          size={130}
+          animating={showActivityIndicator}
+          style={{ position: "absolute", marginTop: 230, marginStart: 140 }}
+        />
         <View>
           {imageUri == "" && (
             <Image

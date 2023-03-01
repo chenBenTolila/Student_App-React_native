@@ -10,6 +10,7 @@ import {
   Alert,
   TextInput,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -26,7 +27,7 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
   const [imageUri, setImageUri] = useState("");
   const [text, setText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  // const [userId, setUserId] = useState("")
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   const askPermission = async () => {
     try {
@@ -39,8 +40,20 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
     }
   };
 
+  const cleanScreen = () => {
+    setImageUri("");
+    setText("");
+  };
+
   useEffect(() => {
     askPermission();
+    const unsubscribe = navigation.addListener("focus", async () => {
+      console.log("focusin login");
+      setShowActivityIndicator(true);
+      cleanScreen();
+      setShowActivityIndicator(false);
+    });
+    return unsubscribe;
   }, []);
 
   const openCamera = async () => {
@@ -72,9 +85,11 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
     // TODO - need to check that the post and text are not empty!!!!!!!!!!!!!!!
 
     console.log("save was pressed");
+    setShowActivityIndicator(true);
 
     if (imageUri == "" || text == "") {
       setErrorMessage("please provide text and image");
+      setShowActivityIndicator(false);
       return;
     }
 
@@ -95,20 +110,29 @@ const AddPost: FC<{ route: any; navigation: any }> = ({
       }
       console.log("saving user");
       await PostModel.addPost(newPost);
+      setShowActivityIndicator(true);
     } catch (err) {
       console.log("fail adding post: " + err);
+      setShowActivityIndicator(true);
     }
     navigation.goBack();
   };
 
   const onCancelCallback = () => {
     console.log("cancel was pressed");
+    setShowActivityIndicator(true);
     navigation.goBack();
   };
 
   return (
     <ScrollView>
       <View style={styles.container}>
+        <ActivityIndicator
+          color={"#93D1C1"}
+          size={130}
+          animating={showActivityIndicator}
+          style={{ position: "absolute", marginTop: 230, marginStart: 140 }}
+        />
         <View>
           {imageUri == "" && (
             <Image
