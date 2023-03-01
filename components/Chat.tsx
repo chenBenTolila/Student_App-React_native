@@ -39,17 +39,16 @@ const ListItem: FC<{
     <TouchableHighlight underlayColor={"gainsboro"}>
       <View
         style={{
-          margin: 10,
+          margin: 8,
           flex: 1,
           elevation: 1,
-          borderRadius: 3,
-          backgroundColor: senderId == currentUserId ? "green" : "grey",
-          marginRight: senderId == currentUserId ? 0 : 20,
-          marginLeft: senderId == currentUserId ? 20 : 0,
+          width: 350,
+          borderRadius: 8,
+          backgroundColor: senderId == currentUserId ? "#659090" : "#EDE1D4",
+          marginRight: senderId == currentUserId ? 0 : 30,
+          marginLeft: senderId == currentUserId ? 50 : 10,
         }}
       >
-        <Text style={styles.userName}>{sender}</Text>
-
         <View style={styles.listRow}>
           {image == "" && (
             <Image
@@ -63,8 +62,9 @@ const ListItem: FC<{
               source={{ uri: image.toString() }}
             />
           )}
-          <Text style={styles.messageText}>{message}</Text>
+          <Text style={styles.userName}>{sender}</Text>
         </View>
+        <Text style={styles.messageText}>{message}</Text>
       </View>
     </TouchableHighlight>
   );
@@ -106,11 +106,6 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     console.log(socket);
 
     if (socket != undefined) {
-      // socket.once("chat:message", (arg) => {
-      //     console.log("new message id === " + arg.res.body._id); // message id
-      //     fetchMessages(socket);
-      //     setNewMessage("");
-      // });
       console.log("test chat send message");
 
       if (newMessage == "") {
@@ -246,13 +241,15 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   userName: {
-    fontSize: 15,
+    fontWeight: "bold",
+    fontSize: 20,
     marginTop: 10,
     marginLeft: 10,
   },
   messageText: {
-    fontSize: 25,
-    marginTop: 10,
+    fontSize: 21,
+    marginLeft: 10,
+    marginTop: 5,
   },
 
   input: {

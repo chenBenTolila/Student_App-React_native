@@ -194,8 +194,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   postContext: {
-    fontSize: 20,
+    fontSize: 24,
     margin: 4,
+    marginLeft: 10,
   },
   flatlist: {
     flex: 1,

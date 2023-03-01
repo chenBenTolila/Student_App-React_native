@@ -26,13 +26,13 @@ const ListItem: FC<{
         <View style={styles.listRow}>
           {userImage == "" && (
             <Image
-              style={styles.listRowImage}
+              style={styles.userImage}
               source={require("../assets/avatar.png")}
             />
           )}
           {userImage != "" && (
             <Image
-              style={styles.listRowImage}
+              style={styles.userImage}
               source={{ uri: userImage.toString() }}
             />
           )}
@@ -117,17 +117,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   list: {
-    margin: 4,
+    margin: 2,
     flex: 1,
     elevation: 1,
     borderRadius: 2,
   },
   listRow: {
-    margin: 4,
+    // margin: 4,
+    // flexDirection: "row",
+    // height: 150,
+    // elevation: 1,
     flexDirection: "row",
-    height: 150,
-    elevation: 1,
-    borderRadius: 2,
   },
   listRowImage: {
     margin: 10,
@@ -141,7 +141,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   listRowName: {
-    fontSize: 30,
+    marginTop: 10,
+    fontSize: 25,
   },
   listRowId: {
     fontSize: 25,
@@ -150,6 +151,13 @@ const styles = StyleSheet.create({
     height: 320,
     width: 320,
     alignSelf: "center",
+  },
+  userImage: {
+    margin: 10,
+    resizeMode: "contain",
+    height: 50,
+    width: 50,
+    borderRadius: 30,
   },
 });
 
