@@ -11,13 +11,17 @@ import {
   TextInput,
   ScrollView,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import FormData from "form-data";
-
 import UserModel, { User } from "../model/UserModel";
+
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const Register: FC<{ route: any; navigation: any }> = ({
   route,
@@ -29,6 +33,10 @@ const Register: FC<{ route: any; navigation: any }> = ({
   const [avatarUri, setAvatarUri] = useState("");
   const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
+  // google variables
+  const [googleToken, setGoogleToken] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
       setShowActivityIndicator(true);
@@ -38,6 +46,16 @@ const Register: FC<{ route: any; navigation: any }> = ({
     });
     return unsubscribe;
   });
+
+  useEffect(() => {
+    if (userInfo != null) {
+      console.log("user info!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      setEmail(userInfo.email);
+      console.log("my pictureeee: " + userInfo.picture);
+      setAvatarUri(userInfo.picture);
+      setName(userInfo.given_name + " " + userInfo.family_name);
+    }
+  }, [userInfo]);
 
   const cleanScreen = () => {
     setEmail("");
@@ -123,6 +141,42 @@ const Register: FC<{ route: any; navigation: any }> = ({
     navigation.goBack();
   };
 
+  const onGoogleCallback = () => {
+    ToastAndroid.show("google", ToastAndroid.LONG);
+    setUserInfo(null);
+    googlePromptAsync();
+  };
+
+  const [request, response, googlePromptAsync] = Google.useAuthRequest({
+    expoClientId:
+      "806690312426-07ugfudravdns682rc9fetqo8477utv4.apps.googleusercontent.com",
+  });
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      setGoogleToken(response.authentication.accessToken);
+      getUserInfo();
+    }
+  }, [response, googleToken]);
+
+  const getUserInfo = async () => {
+    try {
+      const response = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: { Authorization: `Bearer ${googleToken}` },
+        }
+      );
+
+      const googleUser = await response.json();
+      setUserInfo(googleUser);
+      console.log(googleUser);
+      // navigation.navigate("Register", { email: user.email });
+    } catch (error) {
+      // Add your own error handler here
+    }
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -176,6 +230,9 @@ const Register: FC<{ route: any; navigation: any }> = ({
             <Text style={styles.buttonText}>REGISTER</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={onGoogleCallback}>
+          <Ionicons name="md-logo-google" size={24} color="black" />
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

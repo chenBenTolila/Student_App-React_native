@@ -11,11 +11,17 @@ import {
   TextInput,
   ScrollView,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UserModel, { User } from "../model/UserModel";
 import apiClient from "../api/ClientApi";
+import Ionicons from "@expo/vector-icons/Ionicons";
+// import * as WebBrowser from "expo-web-browser";
+// import * as Google from "expo-auth-session/providers/google";
+
+// WebBrowser.maybeCompleteAuthSession();
 
 const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
   route,
@@ -34,7 +40,7 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
       setShowActivityIndicator(false);
     });
     return unsubscribe;
-  });
+  }, []);
 
   const onLoginCallback = async () => {
     // TODO - need to add progress bar (called activity indicator)
@@ -86,6 +92,44 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
     navigation.navigate("Register");
   };
 
+  // const onGoogleCallback = () => {
+  //   ToastAndroid.show("google", ToastAndroid.LONG);
+  //   googlePromptAsync();
+  // };
+
+  // const [googleToken, setGoogleToken] = useState("");
+  // const [userInfo, setUserInfo] = useState(null);
+
+  // const [request, response, googlePromptAsync] = Google.useAuthRequest({
+  //   expoClientId:
+  //     "806690312426-07ugfudravdns682rc9fetqo8477utv4.apps.googleusercontent.com",
+  // });
+
+  // useEffect(() => {
+  //   if (response?.type === "success") {
+  //     setGoogleToken(response.authentication.accessToken);
+  //     getUserInfo();
+  //   }
+  // }, [response, googleToken]);
+
+  // const getUserInfo = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://www.googleapis.com/userinfo/v2/me",
+  //       {
+  //         headers: { Authorization: `Bearer ${googleToken}` },
+  //       }
+  //     );
+
+  //     const user = await response.json();
+  //     setUserInfo(user);
+  //     console.log(user);
+  //     navigation.navigate("Register", { email: user.email });
+  //   } catch (error) {
+  //     // Add your own error handler here
+  //   }
+  // };
+
   const cleanScreen = () => {
     setEmail("");
     setPassword("");
@@ -99,7 +143,7 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
         animating={showActivityIndicator}
         style={{ position: "absolute", marginTop: 190, marginStart: 140 }}
       />
-      <Text>Login To the App</Text>
+      <Text style={styles.text}>Login To the App</Text>
       <TextInput
         style={styles.input}
         onChangeText={setEmail}
@@ -118,9 +162,12 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
           <Text style={styles.buttonText}>LOGIN</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
-          <Text style={styles.buttonText}>Register to the App</Text>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </View>
+      {/* <TouchableOpacity onPress={onGoogleCallback}>
+        <Ionicons name="md-logo-google" size={24} color="black" />
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -142,9 +189,13 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     margin: 12, // for space between the imput texts
-    borderWidth: 1,
+    borderWidth: 2,
     padding: 10,
     borderRadius: 3,
+    borderColor: "#006B6B",
+    width: 260,
+    alignSelf: "center",
+    fontSize: 15,
   },
   buttonsContainer: {
     //flex: 1,
@@ -154,12 +205,16 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 12,
     padding: 12,
-    backgroundColor: "blue",
+    backgroundColor: "#009999",
     borderRadius: 10,
+    width: 350,
+    height: 50,
   },
   buttonText: {
     textAlign: "center",
     color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
   },
   cameraButton: {
     position: "absolute",
@@ -174,6 +229,12 @@ const styles = StyleSheet.create({
     right: 10,
     width: 50,
     height: 50,
+  },
+  text: {
+    fontWeight: "bold",
+    fontSize: 40,
+    alignSelf: "center",
+    color: "#006B6B",
   },
 });
 

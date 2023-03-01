@@ -4,12 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
-  Button,
-  Alert,
-  TextInput,
-  TouchableHighlight,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -23,7 +18,6 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import apiClient from "./api/ClientApi";
 import Profile from "./components/Profile";
-import Test from "./components/Test";
 import AddPost from "./components/AddPost";
 import PostsList from "./components/PostsList";
 import MyPostsList from "./components/MyPostsList";
@@ -127,7 +121,7 @@ const MyPostsStackCp: FC<{ route: any; navigation: any }> = ({
 };
 
 const updateToken = async (setToken: any) => {
-  // await AsyncStorage.clear();
+  await AsyncStorage.clear();
   const token = await AsyncStorage.getItem("accessToken");
   console.log("in update token " + token);
   if (token != null) {
