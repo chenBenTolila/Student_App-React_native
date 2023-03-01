@@ -23,10 +23,10 @@ const addUser = async (user: User) => {
     image: user.image,
   };
   try {
-    const res = AuthApi.addUser(data);
-    console.log(res);
+    return AuthApi.addUser(data);
   } catch (err) {
     console.log("add user fail: " + err);
+    return null;
   }
 };
 

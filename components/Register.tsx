@@ -36,11 +36,11 @@ const Register: FC<{ route: any; navigation: any }> = ({
   // google variables
   const [googleToken, setGoogleToken] = useState("");
   const [userInfo, setUserInfo] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
       setShowActivityIndicator(true);
-      console.log("focusin login");
       cleanScreen();
       setShowActivityIndicator(false);
     });
@@ -49,9 +49,7 @@ const Register: FC<{ route: any; navigation: any }> = ({
 
   useEffect(() => {
     if (userInfo != null) {
-      console.log("user info!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       setEmail(userInfo.email);
-      console.log("my pictureeee: " + userInfo.picture);
       setAvatarUri(userInfo.picture);
       setName(userInfo.given_name + " " + userInfo.family_name);
     }
@@ -62,6 +60,7 @@ const Register: FC<{ route: any; navigation: any }> = ({
     setName("");
     setPassword("");
     setAvatarUri("");
+    setErrorMsg("");
   };
 
   const askPermission = async () => {
@@ -109,7 +108,7 @@ const Register: FC<{ route: any; navigation: any }> = ({
     setShowActivityIndicator(true);
 
     if (email == "" || name == "" || password == "") {
-      // setErrorMessage("please provide text and image");
+      setErrorMsg("please provide email name and password");
       setShowActivityIndicator(false);
       return;
     }
@@ -128,12 +127,25 @@ const Register: FC<{ route: any; navigation: any }> = ({
         console.log("got url from upload: " + url);
       }
       console.log("saving user");
-      await UserModel.addUser(user);
+      const res: any = await UserModel.addUser(user);
+      console.log(res);
+      if (res == null) {
+        setErrorMsg("failed to register - try again");
+        setShowActivityIndicator(false);
+        return;
+      }
+      if (res.status != 200) {
+        setErrorMsg("failed to register - try again");
+        setShowActivityIndicator(false);
+        return;
+      }
+      setShowActivityIndicator(false);
       navigation.goBack();
     } catch (err) {
+      setErrorMsg("failed to register - try again");
       console.log("fail adding user: " + err);
     }
-    //navigation.goBack();
+    setShowActivityIndicator(false);
   };
 
   const onCancelCallback = () => {
@@ -233,6 +245,17 @@ const Register: FC<{ route: any; navigation: any }> = ({
         <TouchableOpacity onPress={onGoogleCallback}>
           <Ionicons name="md-logo-google" size={24} color="black" />
         </TouchableOpacity>
+        {errorMsg != "" && (
+          <Text
+            style={{
+              fontSize: 20,
+              color: "red",
+              alignSelf: "center",
+            }}
+          >
+            {errorMsg}
+          </Text>
+        )}
       </View>
     </ScrollView>
   );

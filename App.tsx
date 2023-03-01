@@ -121,7 +121,7 @@ const MyPostsStackCp: FC<{ route: any; navigation: any }> = ({
 };
 
 const updateToken = async (setToken: any) => {
-  await AsyncStorage.clear();
+  // await AsyncStorage.clear();
   const token = await AsyncStorage.getItem("accessToken");
   console.log("in update token " + token);
   if (token != null) {
@@ -158,28 +158,25 @@ const App: FC = () => {
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName: any = "";
-              if (route.name === "Info") {
-                iconName = focused
-                  ? "information-circle"
-                  : "information-circle-outline";
-              } else if (route.name === "StudentStackCp") {
+              if (route.name === "MyPostsStackCp") {
+                iconName = focused ? "albums" : "albums-outline";
+              } else if (route.name === "PostStackCp") {
                 iconName = focused ? "list-circle" : "list-circle-outline";
-              } else if (route.name === "StudentStackCp") {
-                iconName = focused ? "home" : "home-outline";
+              } else if (route.name === "Profile") {
+                iconName = focused ? "person" : "person-outline";
+              } else if (route.name === "Chat") {
+                iconName = focused
+                  ? "chatbox-ellipses"
+                  : "chatbox-ellipses-outline";
               }
 
               // You can return any component that you like here!
               return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: "tomato",
+            tabBarActiveTintColor: "#009999",
             tabBarInactiveTintColor: "gray",
           })}
         >
-          {/* <Tab.Screen
-            name="StudentStackCp"
-            component={StudentStackCp}
-            options={{ headerShown: false }}
-          /> */}
           <Tab.Screen
             name="PostStackCp"
             component={PostStackCp}

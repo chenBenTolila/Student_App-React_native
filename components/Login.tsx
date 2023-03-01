@@ -17,11 +17,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UserModel, { User } from "../model/UserModel";
 import apiClient from "../api/ClientApi";
-import Ionicons from "@expo/vector-icons/Ionicons";
-// import * as WebBrowser from "expo-web-browser";
-// import * as Google from "expo-auth-session/providers/google";
-
-// WebBrowser.maybeCompleteAuthSession();
 
 const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
   route,
@@ -31,6 +26,7 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showActivityIndicator, setShowActivityIndicator] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
@@ -47,8 +43,14 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
     console.log("login was pressed");
     // TODO - check if the credentials are empty
     setShowActivityIndicator(true);
-    if (email == "" || password == "") {
+    if (email == "") {
       setShowActivityIndicator(false);
+      setErrorMsg("please provide email");
+      return;
+    }
+    if (password == "") {
+      setShowActivityIndicator(false);
+      setErrorMsg("please provide password");
       return;
     }
 
@@ -58,11 +60,13 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
       console.log(res);
       if (!res) {
         console.log("fail to login");
+        setErrorMsg("failed to login - try again");
         setShowActivityIndicator(false);
         return;
       }
       if (res.status != 200) {
         console.log("returned status 400");
+        setErrorMsg("failed to login - try again");
         setShowActivityIndicator(false);
         return;
       }
@@ -92,47 +96,10 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
     navigation.navigate("Register");
   };
 
-  // const onGoogleCallback = () => {
-  //   ToastAndroid.show("google", ToastAndroid.LONG);
-  //   googlePromptAsync();
-  // };
-
-  // const [googleToken, setGoogleToken] = useState("");
-  // const [userInfo, setUserInfo] = useState(null);
-
-  // const [request, response, googlePromptAsync] = Google.useAuthRequest({
-  //   expoClientId:
-  //     "806690312426-07ugfudravdns682rc9fetqo8477utv4.apps.googleusercontent.com",
-  // });
-
-  // useEffect(() => {
-  //   if (response?.type === "success") {
-  //     setGoogleToken(response.authentication.accessToken);
-  //     getUserInfo();
-  //   }
-  // }, [response, googleToken]);
-
-  // const getUserInfo = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       "https://www.googleapis.com/userinfo/v2/me",
-  //       {
-  //         headers: { Authorization: `Bearer ${googleToken}` },
-  //       }
-  //     );
-
-  //     const user = await response.json();
-  //     setUserInfo(user);
-  //     console.log(user);
-  //     navigation.navigate("Register", { email: user.email });
-  //   } catch (error) {
-  //     // Add your own error handler here
-  //   }
-  // };
-
   const cleanScreen = () => {
     setEmail("");
     setPassword("");
+    setErrorMsg("");
   };
 
   return (
@@ -165,9 +132,17 @@ const Login: FC<{ route: any; navigation: any; setToken: any }> = ({
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </View>
-      {/* <TouchableOpacity onPress={onGoogleCallback}>
-        <Ionicons name="md-logo-google" size={24} color="black" />
-      </TouchableOpacity> */}
+      {errorMsg != "" && (
+        <Text
+          style={{
+            fontSize: 20,
+            color: "red",
+            alignSelf: "center",
+          }}
+        >
+          {errorMsg}
+        </Text>
+      )}
     </View>
   );
 };
