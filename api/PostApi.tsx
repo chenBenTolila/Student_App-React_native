@@ -70,12 +70,6 @@ const editPost = async (postId: String, editedPost: any) => {
   console.log(editedPost);
   const res: any = await apiClient.put("/post/" + postId, editedPost);
   console.log("in edit post " + res.status);
-  // if (res.status == 401) {
-  //   console.log("in 401 - editPost");
-
-  //   await UserModel.refreshToken();
-  //   return apiClient.put("/post/" + postId, post);
-  // }
   return res;
 };
 

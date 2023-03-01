@@ -89,8 +89,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     const token = await AsyncStorage.getItem("accessToken");
     console.log("my token");
     console.log(token);
-    //פתיחת סוקט ללקוח
-    socket = Client("http://192.168.1.229:3000", {
+    socket = Client("http://192.168.43.107:3000", {
       auth: {
         token: "barrer " + token,
       },
@@ -151,11 +150,11 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
       console.log(arg.body);
       setMessages(await addUsernameToMessages(arg.body));
       console.log(messages);
+      setShowActivityIndicator(false);
     });
     console.log("test chat get all messages");
     console.log(socket.id);
     socket.emit("chat:get_all");
-    setShowActivityIndicator(false);
   };
 
   const updateUserId = async () => {
